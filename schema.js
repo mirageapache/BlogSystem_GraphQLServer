@@ -36,6 +36,11 @@ const typeDefs = gql`
     createdAt: String
   }
 
+  """
+  日期
+  """
+  scalar Date
+
   type Query{
     "測試用"
     hello: String
@@ -49,6 +54,10 @@ const typeDefs = gql`
     posts: [Post]
     "依id取得特定貼文"
     post(id: ID!): Post
+    "現在時間"
+    now: Date
+    "確認日期是否為週五"
+    isFriday(date: Date!): Boolean
   }
 
   input UpdateMyInfoInput {

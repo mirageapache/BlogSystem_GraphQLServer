@@ -1,4 +1,6 @@
 const { ForbiddenError } = require('apollo-server');
+const { GraphQLScalarType } = require('graphql');
+const { Kind } = require('graphql/language');
 const bcrypt = require('bcrypt');
 const { users, posts } = require('./mockData');
 // const { userModel } = require('./models');
@@ -27,6 +29,8 @@ const resolvers = {
     user: (root, {name}, {userModel}) => userModel.findUserByName(name),
     posts: () => posts,
     post : (root, {id}, {postModel}) => postModel.findPostByPostId(id),
+    now: () => new Date(),
+    isFriday: (root, {date}) => date.getDay() === 5
   },
   User:{
     // 取得貼文
@@ -40,6 +44,26 @@ const resolvers = {
     // 取得貼文按讚的人
     likeGivers: (parent, args, {userModel}) => userModel.filterUserByUserIds(parent.likeGiverIds),
   },
+  Date: new GraphQLScalarType({
+    name: 'Date',
+    description: 'Date custom scalar type',
+    serialize(value) {
+      // 輸出到前端(client)
+      return value;
+    },
+    parseValue(value) {
+      // 從前端(client)來的參數
+      return new Date(value);
+    },
+    parseLiteral(ast){
+      // 從前端 inline variables 進來的 input
+      if(ast.kind === Kind.INT){
+        return new Date(parseInt(ast.value, 10)); // ast的值通常為string格式
+      }
+      return null;
+    }
+
+  }),
   Mutation:{
     // 更新個人資料
     updateMyInfo: isAuthenticated((parent, {input}, {me, userModel}) => {
