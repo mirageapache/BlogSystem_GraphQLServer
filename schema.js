@@ -80,7 +80,7 @@ const typeDefs = gql`
     "新增好友"
     addFriend(userId: ID!): User
     "新增貼文"
-    addPost(input: AddPostInput!): Post
+    addPost(title: String!, content: String): Post
     "貼文按讚"
     likePost(postId: ID!): Post
     "刪除貼文"

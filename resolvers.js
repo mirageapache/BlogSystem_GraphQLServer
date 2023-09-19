@@ -86,10 +86,14 @@ const resolvers = {
       return newMe;
     }),
     // 新增貼文
-    addPost: isAuthenticated((parent, {input}, {me, postModel}) => {
-      const {title, content} = input;
-      return postModel.addPost({authorId: me.id, title, content});
-    }),
+    // addPost: isAuthenticated((parent, {title, content}, {me, postModel}) => {
+    //   // const {title, content} = input;
+    //   console.log(title, content)
+    //   return postModel.addPost({authorId: me.id, title, content});
+    // }),
+    addPost: (parent, {title, content}, {postModel}) => {
+      return postModel.addPost({authorId: 1, title, content});
+    },
     // 貼文按讚
     likePost: isAuthenticated((parent, {postId}, {me, postModel}) => {
       const post = postModel.findPostByPostId(postId);
