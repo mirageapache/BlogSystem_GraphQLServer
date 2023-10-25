@@ -86,14 +86,13 @@ const resolvers = {
       return newMe;
     }),
     // 新增貼文
-    // addPost: isAuthenticated((parent, {title, content}, {me, postModel}) => {
-    //   // const {title, content} = input;
-    //   console.log(title, content)
-    //   return postModel.addPost({authorId: me.id, title, content});
-    // }),
-    addPost: (parent, {title, content}, {postModel}) => {
-      return postModel.addPost({authorId: 1, title, content});
-    },
+    addPost: isAuthenticated((parent, {title, content}, {me, postModel}) => {
+      // const {title, content} = input;
+      return postModel.addPost({authorId: me.id, title, content});
+    }),
+    // addPost: (parent, {title, content}, {postModel}) => {
+    //   return postModel.addPost({authorId: 1, title, content});
+    // },
     // 貼文按讚
     likePost: isAuthenticated((parent, {postId}, {me, postModel}) => {
       const post = postModel.findPostByPostId(postId);
@@ -126,6 +125,7 @@ const resolvers = {
     // 登入
     login: async (root, {email, password}, {secret, userModel}) => {
       // 透過 email找到相對應的 user
+      console.log(email, password)
       const user = users.find(user => user.email === email);
       if(!user) throw new Error('Email account not exists');
 
